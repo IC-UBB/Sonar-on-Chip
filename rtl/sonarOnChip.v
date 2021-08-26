@@ -5,6 +5,8 @@ defines.v - macroodefinitions (come vith Caravel)
 Mic_Clk.v - clock divider for MEMS microphones
 */
 `include "defines.v"
+`define BUS_WIDTH 32
+
 module SonarOnChip(
   
   `ifdef USE_POWER_PINS
@@ -19,31 +21,31 @@ module SonarOnChip(
   `endif
 
     // Wishbone Slave ports (WB MI A)
-    input wb_clk_i,
-    input wb_rst_i,
-    input wbs_stb_i,
-    input wbs_cyc_i,
-    input wbs_we_i,
-    input [3:0] wbs_sel_i,
-    input [31:0] wbs_dat_i,
-    input [31:0] wbs_adr_i,
-    output wbs_ack_o,
-    output [31:0] wbs_dat_o,
+    input wire wb_clk_i,
+    input wire wb_rst_i,
+    input wire wbs_stb_i,
+    input wire wbs_cyc_i,
+    input wire wbs_we_i,
+    input wire [3:0] wbs_sel_i,
+    input wire [`BUS_WIDTH:0] wbs_dat_i,
+    input wire [`BUS_WIDTH:0] wbs_adr_i,
+    output wire wbs_ack_o,
+    output wire [`BUS_WIDTH:0] wbs_dat_o,
 
     // Logic Analyzer Signals
-    input  [127:0] la_data_in,
-    output [127:0] la_data_out,
-    input  [127:0] la_oenb,
+    input wire  [127:0] la_data_in,
+    output wire [127:0] la_data_out,
+    input wire  [127:0] la_oenb,
  
 
     // IOs
-    input  [`MPRJ_IO_PADS-1:0] io_in,
-    output [`MPRJ_IO_PADS-1:0] io_out,
-    output [`MPRJ_IO_PADS-1:0] io_oeb,
+    input wire  [`MPRJ_IO_PADS-1:0] io_in,
+    output wire [`MPRJ_IO_PADS-1:0] io_out,
+    output wire [`MPRJ_IO_PADS-1:0] io_oeb,
 
     // IRQ
-  output [2:0] irq,
-  input [15:0] pcm_i);
+  output wire [2:0] irq,
+  input wire [15:0] pcm_i);
   /*----------------------------- module declaration ends ---------------------*/
   
   /* clock and reset signals*/
@@ -62,25 +64,25 @@ module SonarOnChip(
   
   
   /* Compare module wires*/
-  wire [31:0] treshold;
-  wire [31:0] maf_o;
+  wire [`BUS_WIDTH:0] treshold;
+  wire [`BUS_WIDTH:0] maf_o;
   wire compare_ch1_out;
   
   /* PCM register output signal*/
   wire [15:0] pcm_o;
   /* 32 - bit sign extended pcm value */
-  wire [31:0] pcm32, pcm32abs;
+  wire [`BUS_WIDTH:0] pcm32, pcm32abs;
   
   /* clock enable wiring*/
   wire ce;
   assign ce = la_data_in[0]; 
   
   /* Multiplier  output */
-  wire [31:0] mul_o;
+  wire [`BUS_WIDTH:0] mul_o;
   
   /* Amplifier register signals */
-  wire [31:0] amp_i;
-  wire [31:0] amp;
+  wire [`BUS_WIDTH:0] amp_i;
+  wire [`BUS_WIDTH:0] amp;
   
   assign amp_i = 32'h00000001;
   
@@ -105,7 +107,7 @@ module SonarOnChip(
   /*------------------------   MUL ends    -----------------------------------*/
   
   /*------------------------ AMP starts   -----------------------------------*/
-  REG amp_reg(clk, rst, ce, amp_i, amp);
+  REG #(.n(`BUS_WIDTH)) amp_reg(clk, rst, ce, amp_i, amp);
   /*------------------------ AMP endss   -----------------------------------*/
   
   
