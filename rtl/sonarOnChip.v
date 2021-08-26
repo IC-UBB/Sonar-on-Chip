@@ -4,6 +4,7 @@ Files:
 defines.v - macroodefinitions (come vith Caravel)
 Mic_Clk.v - clock divider for MEMS microphones
 */
+`include "defines.v"
 module SonarOnChip(
   
   `ifdef USE_POWER_PINS
