@@ -1,1 +1,5 @@
-work *.swp *.vcd *.hex *.bin
+work 
+*.swp 
+*.vcd 
+*.hex 
+*.bin

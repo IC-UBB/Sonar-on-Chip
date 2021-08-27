@@ -10,7 +10,7 @@ module Mic_Clk(
   
   reg micclk_t;
   reg [7:0] count;
-  reg [7:0] limit;
+  wire [7:0] limit;
   wire en;
 
   // externalize this register to be configurable via WishBone
