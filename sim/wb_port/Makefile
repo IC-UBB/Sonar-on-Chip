@@ -23,9 +23,9 @@ CARAVEL_RTL_PATH = $(CARAVEL_VERILOG_PATH)/rtl
 CARAVEL_BEHAVIOURAL_MODELS = $(CARAVEL_VERILOG_PATH)/dv/caravel
 
 ## User Project Pointers
-UPRJ_VERILOG_PATH ?= ../../
+UPRJ_VERILOG_PATH ?= /home/u5646_maurici/design/P_caravel_user_project/
 UPRJ_RTL_PATH = $(UPRJ_VERILOG_PATH)/rtl
-UPRJ_BEHAVIOURAL_MODELS = ../
+UPRJ_BEHAVIOURAL_MODELS = /home/u5646_maurici/design/P_caravel_user_project/sim
 
 ## RISCV GCC 
 GCC_PATH?=/ef/apps/bin/
