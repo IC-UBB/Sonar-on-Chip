@@ -1,5 +1,7 @@
 work 
 *.swp 
 *.vcd 
+*.vcd.fst
+*.gtkw
 *.hex 
 *.bin

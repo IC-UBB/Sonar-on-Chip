@@ -37,7 +37,7 @@ SIM?=RTL
 
 .SUFFIXES:
 
-PATTERN = la_test1
+PATTERN = wb_port 
 
 all:  ${PATTERN:=.vcd}
 
@@ -48,12 +48,14 @@ ifeq ($(SIM),RTL)
 	iverilog -DFUNCTIONAL -DSIM -I $(PDK_PATH) \
 	-I $(CARAVEL_BEHAVIOURAL_MODELS) -I $(CARAVEL_RTL_PATH) \
 	-I $(UPRJ_BEHAVIOURAL_MODELS)    -I $(UPRJ_RTL_PATH) \
+	-I ../../rtl/include \
 	-o $@ \
 	$<  
 else  
 	iverilog -DFUNCTIONAL -DSIM -DGL -I $(PDK_PATH) \
 	-I $(CARAVEL_BEHAVIOURAL_MODELS) -I $(CARAVEL_RTL_PATH) -I $(CARAVEL_VERILOG_PATH) \
 	-I $(UPRJ_BEHAVIOURAL_MODELS) -I$(UPRJ_RTL_PATH)   -I $(UPRJ_VERILOG_PATH) \
+	-I ../../rtl/include \
 	-o $@ \
 	$<  
 endif

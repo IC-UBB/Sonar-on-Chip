@@ -30,6 +30,8 @@ module wb_port_tb;
 
 	wire gpio;
 	wire [37:0] mprj_io;
+	reg [15:0] gpio_reg;
+	assign mprj_io[15:0] = gpio_reg;
 	wire [7:0] mprj_io_0;
 	wire [15:0] checkbits;
 
@@ -45,6 +47,7 @@ module wb_port_tb;
 
 	initial begin
 		clock = 0;
+		gpio_reg = 16'hBEEF;
 	end
 
 	initial begin
