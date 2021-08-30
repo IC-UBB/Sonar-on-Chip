@@ -5,15 +5,15 @@ module IIR_Filter
   #(
     parameter N  = 16)
   (
-    input         clk,
-    input         rst,
-    input         en,
-    input [N-1:0] X,
-    input [N-1:0] a0,
-    input [N-1:0] a1,
-    input [N-1:0] a2,
-    input [N-1:0] b1,
-    input [N-1:0] b2,
+    input wire clk,
+    input wire rst,
+    input wire en,
+    input wire [N-1:0] X,
+    input wire [N-1:0] a0,
+    input wire [N-1:0] a1,
+    input wire [N-1:0] a2,
+    input wire [N-1:0] b1,
+    input wire [N-1:0] b2,
     output reg  valid,
     output reg [2*N-1:0] Y);
   

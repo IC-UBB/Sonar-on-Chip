@@ -4,9 +4,9 @@ It multiplies the system clock period by a natural number in a range
 of 1:255. 
 */
 module Mic_Clk(
-    input         clk,
-    input         rst,
-    output 		  micclk);
+    input  wire clk,
+    input  wire rst,
+    output wire micclk);
   
   reg micclk_t;
   reg [7:0] count;

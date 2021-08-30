@@ -83,7 +83,7 @@ void main()
   reg_mprj_slave = 0x00002710;
 	uint32_t * p = (uint32_t *) &reg_mprj_slave;
 	int i;
-	for (i=0;i<7;i++) {
+	for (i=0;i<8;i++) {
 		p[i]=i;
 	}
 	for (i=0;i<10;i++) {

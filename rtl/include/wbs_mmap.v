@@ -5,3 +5,4 @@ parameter A2_ADDR = 'd3;
 parameter B1_ADDR = 'd4;
 parameter B2_ADDR = 'd5;
 parameter AMP_ADDR = 'd6;
+parameter THRESHOLD_ADDR = 'd7;

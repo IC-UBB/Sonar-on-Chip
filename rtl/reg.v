@@ -8,11 +8,10 @@
 /////////////////////////////////////////////////////////////////////////////////
 module REG(clk,rst,ce, D, Q);
 	parameter n=16; // Parameter
-    input[n-1:0] D;
-	input rst,clk,ce;
-    output[n-1:0] Q;
-    reg[n-1:0] Q;
-	
+  input wire [n-1:0] D;
+	input wire rst,clk,ce;
+  output reg [n-1:0] Q;
+
   always @(posedge clk)
 	begin
       if(rst) Q<=0;

@@ -10,14 +10,14 @@ Mic_Clk.v - clock divider for MEMS microphones
 module SonarOnChip(
   
   `ifdef USE_POWER_PINS
-    inout vdda1,	// User area 1 3.3V supply
-    inout vdda2,	// User area 2 3.3V supply
-    inout vssa1,	// User area 1 analog ground
-    inout vssa2,	// User area 2 analog ground
-    inout vccd1,	// User area 1 1.8V supply
-    inout vccd2,	// User area 2 1.8v supply
-    inout vssd1,	// User area 1 digital ground
-    inout vssd2,	// User area 2 digital ground
+    inout wire vdda1,	// User area 1 3.3V supply
+    inout wire vdda2,	// User area 2 3.3V supply
+    inout wire vssa1,	// User area 1 analog ground
+    inout wire vssa2,	// User area 2 analog ground
+    inout wire vccd1,	// User area 1 1.8V supply
+    inout wire vccd2,	// User area 2 1.8v supply
+    inout wire vssd1,	// User area 1 digital ground
+    inout wire vssd2,	// User area 2 digital ground
   `endif
 
     // Wishbone Slave ports (WB MI A)
@@ -64,7 +64,6 @@ module SonarOnChip(
   wire mclk;
   
   /* Compare module wires*/
-  wire [2*`BUS_WIDTH-1:0] treshold;
   wire [2*`BUS_WIDTH-1:0] maf_o;
   wire compare_ch1_out;
 	assign io_out[16] = compare_ch1_out;
@@ -109,6 +108,7 @@ module SonarOnChip(
 	reg [`BUS_WIDTH-1:0] a2;
 	reg [`BUS_WIDTH-1:0] b1;
 	reg [`BUS_WIDTH-1:0] b2;
+  reg [2*`BUS_WIDTH-1:0] threshold;
 	wire iir_valid;
 	always@(posedge clk) begin
 		if(rst) begin
@@ -123,13 +123,14 @@ module SonarOnChip(
 			wbs_done <= 0;
 			if(wb_valid) begin
 				case(wbs_adr_i[5:2])
-					CONTROL_ADDR: control <= wbs_dat_i;
-					A0_ADDR			: a0 <= wbs_dat_i;
-					A1_ADDR			: a1 <= wbs_dat_i;
-					A2_ADDR			: a2 <= wbs_dat_i;
-					B1_ADDR			: b1 <= wbs_dat_i;
-					B2_ADDR			: b2 <= wbs_dat_i;
-					AMP_ADDR		: amp <= wbs_dat_i;
+					CONTROL_ADDR		: control <= wbs_dat_i;
+					A0_ADDR					: a0 <= wbs_dat_i;
+					A1_ADDR					: a1 <= wbs_dat_i;
+					A2_ADDR					: a2 <= wbs_dat_i;
+					B1_ADDR					: b1 <= wbs_dat_i;
+					B2_ADDR					: b2 <= wbs_dat_i;
+					AMP_ADDR				: amp <= wbs_dat_i;
+					THRESHOLD_ADDR	: threshold <= wbs_dat_i;
 					default:;
 				endcase
 				wbs_done <= 1;
@@ -190,7 +191,7 @@ module SonarOnChip(
   
   /*------------------------  COMP starts   ----------------------------------*/
   
-  comparator comp(maf_o, treshold, compare_ch1_out);
+  comparator comp(maf_o, threshold, compare_ch1_out);
   
   /*------------------------   COMP ends    ----------------------------------*/
   
