@@ -80,11 +80,15 @@ void main()
     // Flag start of the test
 	reg_mprj_datal = 0xAB600000;
 
-    reg_mprj_slave = 0x00002710;
-    //if (reg_mprj_slave == 0x2752) {
-    if (reg_mprj_slave == 0x274F) {
-        reg_mprj_datal = 0xAB610000;
-    } else {
-        reg_mprj_datal = 0xAB600000;
-    }
+  reg_mprj_slave = 0x00002710;
+	uint32_t * p = (uint32_t *) &reg_mprj_slave;
+	int i;
+	for (i=0;i<8;i++) {
+		p[i]=i;
+	}
+	for (i=0;i<10;i++) {
+  	reg_mprj_slave = 0x00002711;
+	}
+  reg_mprj_slave = 0x00002710;
+  reg_mprj_datal = 0xAB610000;
 }

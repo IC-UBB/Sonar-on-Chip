@@ -25,7 +25,7 @@
 `else
     `include "user_project_wrapper.v"
     `include "sonarOnChip.v"
-//    `include "IIR_Filter.v"
+    `include "IIR_Filter.v"
 		`include "MAF_Filter.v"
 		`include "abs.v"
 		`include "comparator.v"
