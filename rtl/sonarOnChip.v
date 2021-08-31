@@ -100,7 +100,7 @@ module SonarOnChip(
 	assign wbs_dat_o = rdata;
 	assign wdata = wbs_dat_i;
 
-`include "wbs_mmap.v"
+`include "include/wbs_mmap.v"
 	reg [`BUS_WIDTH-1:0] control;
 	reg [`BUS_WIDTH-1:0] amp;
 	reg [`BUS_WIDTH-1:0] a0;

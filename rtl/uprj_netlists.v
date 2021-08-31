@@ -29,7 +29,7 @@
 		`include "MAF_Filter.v"
 		`include "abs.v"
 		`include "comparator.v"
-		`include "Mic_clk.v"
+		`include "mic_clk.v"
 		`include "multiplier.v"
 		`include "reg.v"
 		`include "signext.v"

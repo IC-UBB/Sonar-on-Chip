@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ## Caravel Pointers
-CARAVEL_ROOT ?= /home/u5646_maurici/design/P_caravel_user_project/caravel
+CARAVEL_ROOT ?= ../../caravel
 CARAVEL_PATH ?= $(CARAVEL_ROOT)
 CARAVEL_FIRMWARE_PATH = $(CARAVEL_PATH)/verilog/dv/caravel
 CARAVEL_VERILOG_PATH  = $(CARAVEL_PATH)/verilog
@@ -23,21 +23,27 @@ CARAVEL_RTL_PATH = $(CARAVEL_VERILOG_PATH)/rtl
 CARAVEL_BEHAVIOURAL_MODELS = $(CARAVEL_VERILOG_PATH)/dv/caravel
 
 ## User Project Pointers
-UPRJ_VERILOG_PATH ?= /home/u5646_maurici/design/P_caravel_user_project/
+UPRJ_VERILOG_PATH ?= ../../
 UPRJ_RTL_PATH = $(UPRJ_VERILOG_PATH)/rtl
-UPRJ_BEHAVIOURAL_MODELS = /home/u5646_maurici/design/P_caravel_user_project/sim
+UPRJ_BEHAVIOURAL_MODELS = ../
 
 ## RISCV GCC 
+#<<<<<<< HEAD
+GCC_PATH?=/opt/riscv/bin
+GCC_PREFIX?=riscv64-unknown-elf
+PDK_PATH?=$(PDK_ROOT)/sky130A
+#=======
 GCC_PATH?=/ef/apps/bin/
 GCC_PREFIX?=riscv32-unknown-elf
 PDK_PATH?=/ef/tech/SW.2/sky130A/
+#>>>>>>> 6def3b1865a2197bd7d82cc7512ce08e2e1d6063
 
 ## Simulation mode: RTL/GL
 SIM?=RTL
 
 .SUFFIXES:
 
-PATTERN = wb_port 
+PATTERN = la_test1
 
 all:  ${PATTERN:=.vcd}
 
@@ -48,14 +54,12 @@ ifeq ($(SIM),RTL)
 	iverilog -DFUNCTIONAL -DSIM -I $(PDK_PATH) \
 	-I $(CARAVEL_BEHAVIOURAL_MODELS) -I $(CARAVEL_RTL_PATH) \
 	-I $(UPRJ_BEHAVIOURAL_MODELS)    -I $(UPRJ_RTL_PATH) \
-	-I ../../rtl/include \
 	-o $@ \
 	$<  
 else  
 	iverilog -DFUNCTIONAL -DSIM -DGL -I $(PDK_PATH) \
 	-I $(CARAVEL_BEHAVIOURAL_MODELS) -I $(CARAVEL_RTL_PATH) -I $(CARAVEL_VERILOG_PATH) \
 	-I $(UPRJ_BEHAVIOURAL_MODELS) -I$(UPRJ_RTL_PATH)   -I $(UPRJ_VERILOG_PATH) \
-	-I ../../rtl/include \
 	-o $@ \
 	$<  
 endif
@@ -69,7 +73,7 @@ endif
 %.hex: %.elf
 	${GCC_PATH}/${GCC_PREFIX}-objcopy -O verilog $< $@ 
 	# to fix flash base address
-	gsed -i 's/@10000000/@00000000/g' $@
+	sed -i 's/@10000000/@00000000/g' $@
 
 %.bin: %.elf
 	${GCC_PATH}/${GCC_PREFIX}-objcopy -O binary $< /dev/stdout | tail -c +1048577 > $@
