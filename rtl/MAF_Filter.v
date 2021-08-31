@@ -18,11 +18,11 @@
 
 module MAF_FILTER
 (
-  input clk,
-  input rst,
-  input we,
-  input [32-1:0]data_in,
-  output [32-1:0] data_out 
+  input wire clk,
+  input wire rst,
+  input wire we,
+  input wire [32-1:0]data_in,
+  output wire [32-1:0] data_out 
 );
 
 wire [32-1:0] connect_wire[4:0]; //wires for interconnect DFFs
