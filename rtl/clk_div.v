@@ -27,7 +27,7 @@ output reg we_pcm);
                 end 
               
     // ============= COUNTER LOGIC END ============== //   
-   		end   
+   	end   
   end
 endmodule 
 // ---------- Module END ---------- //
