@@ -21,15 +21,13 @@ output reg we_pcm);
        else begin
             count <= count + 1;               
                 if (count == C-1) begin
-                      we_pcm <= 1'b1; 
-                      count <= 0;  //reset counter
-                   end 
-                else begin
-                  we_pcm<=1'b0;
-                end
+			if (we_pcm) wc_pcm <= 1'b0;
+                      	else we_pcm <= 1'b1;
+		   count <= 0;  //reset counter
+                end 
               
     // ============= COUNTER LOGIC END ============== //   
-   		end   
+   	end   
   end
 endmodule 
 // ---------- Module END ---------- //
