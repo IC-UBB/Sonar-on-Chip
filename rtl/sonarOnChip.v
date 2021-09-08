@@ -214,19 +214,15 @@ module SonarOnChip(
   /*------------------------  CLKDIV PDM starts   --------------------------------*/
 
   wire [7:0] pdm_clkdiv_i;
-  wire [7:0] pdm_clkdiv_o;
   assign pdm_clkdiv_i = pdm_clk_div_reg;
-  REG PDM_clkdiv_reg(clk, rst, ce , pdm_clkdiv_i, pdm_clkdiv_o);
-  CLOCK_DIVIDER divpdm(clk, rst, pdm_clkdiv_o, mclk);
+  CLOCK_DIVIDER divpdm(clk, rst, pdm_clkdiv_i, mclk);
   /*------------------------  CLOCKDIV PDM ends   --------------------------------*/
 
 /*------------------------  CLKDIV PCM starts   --------------------------------*/
   wire [7:0] pcm_clkdiv_i;
-  wire [7:0] pcm_clkdiv_o;
   wire  we_pcm;
   assign pcm_clkdiv_i = pcm_clk_div_reg;
-  REG PCM_clkdiv_reg(clk, rst, ce , pcm_clkdiv_i, pcm_clkdiv_o);
-  CLOCK_DIVIDER divpcm(clk, rst, pcm_clkdiv_o, we_pcm);
+  CLOCK_DIVIDER divpcm(clk, rst, pcm_clkdiv_i, we_pcm);
   /*------------------------  CLOCKDIV PCM ends   --------------------------------*/
 
 
