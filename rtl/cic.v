@@ -8,8 +8,8 @@
 
 // =========== Top module START =========== //
 module RSS0 #(parameter N = 16)(
-  input clk, we, rst, Ctrl,
-  input [N-1:0] data_in,
+  input clk, we, rst,
+  input              data_in,
   output reg [N-1:0] data_out
 );
    //wire signed [N-1:0] L1_o;
@@ -54,9 +54,9 @@ module RSS0 #(parameter N = 16)(
   reg [N-1:0] ff31;
   reg [N-1:0] ff32;
   
-
-  
-   assign sum0 = data_in-ff31;
+   wire [N-1 : 0] data_N_in;
+   assign data_N_in = data_in;
+   assign sum0 = data_N_in-ff31;
    assign sum1 = sum0+ff32;
   
   always @(posedge clk)

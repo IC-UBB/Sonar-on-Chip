@@ -21,8 +21,6 @@ module IIR_Filter
   reg [N-1:0] Y1, Y2;
   wire [N-1:0] Yt;
   
-  //assign Y = Yt;
-  //assign Yt = X*a0 + X1*a1 + a2*X2 - Y1*b1 + Y2*b2;
   
   always@(posedge clk) begin
     if(rst ==1'b1) 

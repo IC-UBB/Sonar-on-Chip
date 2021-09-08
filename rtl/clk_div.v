@@ -1,7 +1,7 @@
 // CLK DIV MODULE
 
 // ---------- Module START ---------- //
-module DIV_COUNT #(parameter N=8)( 
+module CLOCK_DIVIDER #(parameter N=8)( 
                      // C = counter end value
 input clk, rst,
 input [N-1:0] C,

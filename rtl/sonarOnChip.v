@@ -4,7 +4,7 @@ Files:
 defines.v - macroodefinitions (come vith Caravel)
 Mic_Clk.v - clock divider for MEMS microphones
 */
-`include "defines.v"
+`include "include/defines.v"
 `define BUS_WIDTH 16 
 
 module SonarOnChip(
@@ -69,17 +69,17 @@ module SonarOnChip(
 	assign io_out[16] = compare_ch1_out;
  
   /* PCM inputs from GPIO, will come from PDM */	
-  wire [`BUS_WIDTH-1:0] pcm_i;
-	assign pcm_i = io_in[`BUS_WIDTH-1:0];
+  wire [`BUS_WIDTH-1:0] pcm_reg_i;
+	//assign pcm_reg_i = io_in[`BUS_WIDTH-1:0];
 
   /* PCM register output signal*/
-  wire [`BUS_WIDTH-1:0] pcm_o;
+  wire [`BUS_WIDTH-1:0] pcm_reg_o;
   /* 32 - bit sign extended pcm value */
   wire [2*`BUS_WIDTH-1:0] pcm32, pcm32abs;
   
   /* clock enable wiring*/
   wire ce;
-  assign ce = control[0]; 
+  assign ce = 1; 
   
   /* Multiplier  output */
   wire [2*`BUS_WIDTH-1:0] mul_o;
@@ -109,6 +109,8 @@ module SonarOnChip(
 	reg [`BUS_WIDTH-1:0] b1;
 	reg [`BUS_WIDTH-1:0] b2;
   reg [2*`BUS_WIDTH-1:0] threshold;
+  reg [7:0] pdm_clk_div_reg;
+  reg [7:0] pcm_clk_div_reg;
 	wire iir_valid;
 	always@(posedge clk) begin
 		if(rst) begin
@@ -118,6 +120,9 @@ module SonarOnChip(
 			a2 <= 0;
 			b1 <= 0;
 			b2 <= 0;
+      amp <= 0;
+      pdm_clk_div_reg <= 8'h09;
+      pcm_clk_div_reg <= 8'h65;
 		end
 		else begin
 			wbs_done <= 0;
@@ -140,16 +145,27 @@ module SonarOnChip(
   /*-------------------------Structural modelling ----------------------------*/
   
   /*------------------------  PDM starts   -----------------------------------*/
+  
+  wire mic_in;
+  assign mic_in = io_in[0];
+  assign io_out[1] = mclk;
+  assign io_oeb[1] = 1'b1;
+  wire [`BUS_WIDTH-1:0] cic_out;
+
+  RSS0  cicmodule(clk, mclk, rst, mic_in, cic_out);
+
   /*------------------------   PDM ends    -----------------------------------*/
   
   /*------------------------  PCM starts   -----------------------------------*/
   
-  REG pcm_reg(clk, rst, control[0], pcm_i, pcm_o);
+  assign pcm_reg_i = cic_out;
+
+  REG pcm_reg(clk, rst, control[0], pcm_reg_i, pcm_reg_o);
   
   /*------------------------   PCM ends    -----------------------------------*/
   
   /*------------------------   SE starts    -----------------------------------*/
-  signext se(pcm_o, pcm32);
+  signext se(pcm_reg_o, pcm32);
   /*------------------------   SE ends    -----------------------------------*/
   
   /*------------------------  MUL starts   -----------------------------------*/
@@ -174,7 +190,7 @@ module SonarOnChip(
     .clk(clk),
     .rst(rst),
     .en(ce),
-    .X(pcm_o),
+    .X(pcm_reg_o),
     .a0(a0),
     .a1(a1),
     .a2(a2),
@@ -195,11 +211,24 @@ module SonarOnChip(
   
   /*------------------------   COMP ends    ----------------------------------*/
   
-  /*------------------------  CLKDIV starts   --------------------------------*/
- 
-  Mic_Clk micclk(clk, rst, mclk);
-  
-  /*------------------------  CLOCKDIV ends   --------------------------------*/
+  /*------------------------  CLKDIV PDM starts   --------------------------------*/
+
+  wire [7:0] pdm_clkdiv_i;
+  wire [7:0] pdm_clkdiv_o;
+  assign pdm_clkdiv_i = pdm_clk_div_reg;
+  REG PDM_clkdiv_reg(clk, rst, ce , pdm_clkdiv_i, pdm_clkdiv_o);
+  CLOCK_DIVIDER divpdm(clk, rst, pdm_clkdiv_o, mclk);
+  /*------------------------  CLOCKDIV PDM ends   --------------------------------*/
+
+/*------------------------  CLKDIV PCM starts   --------------------------------*/
+  wire [7:0] pcm_clkdiv_i;
+  wire [7:0] pcm_clkdiv_o;
+  wire  we_pcm;
+  assign pcm_clkdiv_i = pcm_clk_div_reg;
+  REG PCM_clkdiv_reg(clk, rst, ce , pcm_clkdiv_i, pcm_clkdiv_o);
+  CLOCK_DIVIDER divpcm(clk, rst, pcm_clkdiv_o, we_pcm);
+  /*------------------------  CLOCKDIV PCM ends   --------------------------------*/
+
 
 
 endmodule
